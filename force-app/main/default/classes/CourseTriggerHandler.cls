@@ -28,14 +28,16 @@ public with sharing class CourseTriggerHandler {
                     System.debug(calendarEventToDelete);
                 }
             }
-            calendarEventsToInsert.add(CalendarEvent);
-            System.debug(calendarEvent);
+            if(o.StageName != 'Cancelled'){
+                calendarEventsToInsert.add(CalendarEvent);
+                System.debug(calendarEvent);
+            }
         }
         insert calendarEventsToInsert;
         delete calendarEventsToDelete;
     }
 
-    public static void CourseEmail(List<Opportunity> courses, Boolean isUpdate, Boolean isDelete){
+    public static void CourseEmail(List<Opportunity> courses, Map<Id, Opportunity> oldMap, Boolean isUpdate, Boolean isDelete){
         List<Messaging.SingleEmailMessage> emails = new List<Messaging.SingleEmailMessage>();
         List<Id> InstructorIds = new List<Id>();
         for(Opportunity course : courses){
@@ -52,6 +54,10 @@ public with sharing class CourseTriggerHandler {
             if(isUpdate){
                 subject = 'Course Updated';
                 body = 'Dear: '+InstructorNames[i].Name+',<br> You have a course of type: '+courses[i].Type+'<br> This course has been rescheduled to: '+courses[i].Start_Date__c;
+                if(courses[i].StageName != oldMap.get(courses[i].Id).StageName && courses[i].StageName == 'Cancelled'){
+                    subject = 'Course Cancelled';
+                    body = 'Dear: '+InstructorNames[i].Name+',<br> You had a course of type: '+courses[i].Type+'<br> on: '+courses[i].Start_Date__c+'<br> This course was cancelled.';
+                }
             }
             if(isDelete){
                 subject = 'Course Deleted';

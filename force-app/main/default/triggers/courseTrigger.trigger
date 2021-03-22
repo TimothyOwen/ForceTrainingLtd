@@ -14,14 +14,14 @@ trigger courseTrigger on Opportunity (before insert, after insert, before update
         if(Trigger.isInsert){
             CourseTriggerHandler.CourseShare(Trigger.new);
             CourseTriggerHandler.CourseEvent(Trigger.new, Trigger.isUpdate);
-            CourseTriggerHandler.CourseEmail(Trigger.new, Trigger.isUpdate, Trigger.isDelete);
+            CourseTriggerHandler.CourseEmail(Trigger.new, Trigger.oldMap, Trigger.isUpdate, Trigger.isDelete);
         }
         if(Trigger.isUpdate){
             CourseTriggerHandler.CourseEvent(Trigger.new, Trigger.isUpdate);
-            CourseTriggerHandler.CourseEmail(Trigger.new, Trigger.isUpdate, Trigger.isDelete);
+            CourseTriggerHandler.CourseEmail(Trigger.new, Trigger.oldMap, Trigger.isUpdate, Trigger.isDelete);
         }
         if(Trigger.isDelete){
-            CourseTriggerHandler.CourseEmail(Trigger.old, Trigger.isUpdate, Trigger.isDelete);
+            CourseTriggerHandler.CourseEmail(Trigger.old, Trigger.oldMap, Trigger.isUpdate, Trigger.isDelete);
         }
     }
 }
