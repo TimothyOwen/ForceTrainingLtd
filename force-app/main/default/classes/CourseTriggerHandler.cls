@@ -12,7 +12,7 @@ public with sharing class CourseTriggerHandler {
     }      
     public static void CourseEvent(List<Opportunity> newCourses, Boolean isUpdate){
         List<Event> calendarEventsToInsert = new List<Event>();
-        List<Event> calendarEventsToDelete = new List<Event>();
+        Set<Id> calendarEventsToDelete = new Set<Id>();
         for(Opportunity o : newCourses){
             Event calendarEvent = new Event();
             calendarEvent.Subject = 'Course';
@@ -23,17 +23,14 @@ public with sharing class CourseTriggerHandler {
             calendarEvent.Type = o.Type;
             calendarEvent.WhatId = o.Id;
             if(isUpdate){
-                for(Event calendarEventToDelete : [SELECT WhoId FROM Event WHERE WhatId = :o.Id]){
-                    calendarEventsToDelete.add(calendarEventToDelete);
-                    //Add to set instead of SOQL in for LOOP
-                }
+                calendarEventsToDelete.add(o.Id);
             }
             if(o.StageName != 'Cancelled'){
                 calendarEventsToInsert.add(CalendarEvent);
             }
         }
+        delete [SELECT WhoId FROM Event WHERE WhatId = :calendarEventsToDelete];
         insert calendarEventsToInsert;
-        delete calendarEventsToDelete;
     }
 
     public static void CourseEmail(List<Opportunity> courses, Map<Id, Opportunity> oldMap, Boolean isUpdate, Boolean isDelete){
