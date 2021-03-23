@@ -25,12 +25,11 @@ public with sharing class CourseTriggerHandler {
             if(isUpdate){
                 for(Event calendarEventToDelete : [SELECT WhoId FROM Event WHERE WhatId = :o.Id]){
                     calendarEventsToDelete.add(calendarEventToDelete);
-                    System.debug(calendarEventToDelete);
+                    //Add to set instead of SOQL in for LOOP
                 }
             }
             if(o.StageName != 'Cancelled'){
                 calendarEventsToInsert.add(CalendarEvent);
-                System.debug(calendarEvent);
             }
         }
         insert calendarEventsToInsert;
