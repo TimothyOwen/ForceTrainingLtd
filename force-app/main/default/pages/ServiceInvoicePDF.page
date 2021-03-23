@@ -1,0 +1,34 @@
+<apex:page standardController="InvoiceC__c" renderAs="pdf">
+    <apex:stylesheet value="{!$Resource.InvoiceCSS}" />
+    <apex:pageBlock>
+    <apex:image id="ForceTraining" value="{!$Resource.ForceTraining}" width="200" height="50" alt="Force Training"/>
+    <p class="address">{!InvoiceC__c.Course__r.Account.BillingStreet}</p> 
+    <p class="address">{!InvoiceC__c.Course__r.Account.BillingCity}</p> 
+    <p class="address">{!InvoiceC__c.Course__r.Account.BillingPostalCode}</p> 
+    <p class="address">{!InvoiceC__c.Course__r.Account.BillingCountry}</p> 
+    <div class="box">
+        <p><b>Invoice ID</b>: {!InvoiceC__c.Invoice_ID__c}<br></br></p> 
+        <p><b>Instructor Full Name</b>: {!InvoiceC__c.Course__r.Instructor__r.Name}<br></br></p>
+        <p><b>Course</b>: {!InvoiceC__c.Course__r.Name}<br></br></p>
+    </div>
+    <apex:dataTable value="{!InvoiceC__c.Invoice_Lines__r}" var="InvoiceLine" id="table1" headerClass="theHead" rowClasses="odd,even" styleClass="tableClass">
+    <apex:column styleClass="col">
+        <apex:facet name="header">Course Type</apex:facet>
+        <apex:outputText value="{!InvoiceLine.Invoice__r.Course__r.Type}"/>
+    </apex:column>
+    <apex:column styleClass="col">
+        <apex:facet name="header">Date</apex:facet>
+        <apex:outputText value="{!InvoiceLine.Date__c}"/>
+    </apex:column>
+    <apex:column styleClass="col">
+        <apex:facet name="header">Service Hours</apex:facet>
+        <apex:outputText value="{!InvoiceLine.Hours__c}"/>
+    </apex:column>
+    </apex:dataTable>
+    <div class="box">
+        <p class="invoice">Total Service Hours: {!InvoiceC__c.Total_Service_Hours__c}<br></br></p>
+        <p class="invoice"><b>Sub Total:</b> £{!InvoiceC__c.Sub_Total__c}<br></br></p> 
+        <p class="invoice"><b>VAT:</b> £{!InvoiceC__c.VAT__c}<br></br></p>  
+    </div>
+    </apex:pageBlock>
+</apex:page>

@@ -13,19 +13,19 @@ public with sharing class CourseTriggerHandler {
     public static void CourseEvent(List<Opportunity> newCourses, Boolean isUpdate){
         List<Event> calendarEventsToInsert = new List<Event>();
         Set<Id> calendarEventsToDelete = new Set<Id>();
-        for(Opportunity o : newCourses){
+        for(Opportunity course : newCourses){
             Event calendarEvent = new Event();
             calendarEvent.Subject = 'Course';
-            calendarEvent.StartDateTime = o.Start_Date__c;
-            calendarEvent.EndDateTime = o.CloseDate;
-            calendarEvent.OwnerId = o.Instructor__c;
-            calendarEvent.Location = o.Location__c;
-            calendarEvent.Type = o.Type;
-            calendarEvent.WhatId = o.Id;
+            calendarEvent.StartDateTime = course.Start_Date__c;
+            calendarEvent.EndDateTime = course.CloseDate;
+            calendarEvent.OwnerId = course.Instructor__c;
+            calendarEvent.Location = course.Location__c;
+            calendarEvent.Type = course.Type;
+            calendarEvent.WhatId = course.Id;
             if(isUpdate){
-                calendarEventsToDelete.add(o.Id);
+                calendarEventsToDelete.add(course.Id);
             }
-            if(o.StageName != 'Cancelled'){
+            if(course.StageName != 'Cancelled'){
                 calendarEventsToInsert.add(CalendarEvent);
             }
         }
@@ -64,7 +64,6 @@ public with sharing class CourseTriggerHandler {
             email.setSubject(subject);
             email.setHtmlBody(body);
             emails.add(email);
-            System.debug(subject + body + InstructorNames[i].Name);
         }    
         Messaging.sendEmail(emails, false);
     }
