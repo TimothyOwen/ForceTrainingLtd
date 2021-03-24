@@ -37,37 +37,47 @@ public with sharing class CourseTriggerHandler {
         }
     }
 
-    public static void CourseEmail(List<Opportunity> courses, Map<Id, Opportunity> oldMap, Boolean isUpdate, Boolean isDelete){
+    public static void CourseEmail(List<Opportunity> courses, Map<Id, Opportunity> oldMap, Boolean isInsert, Boolean isUpdate, Boolean isDelete){
         List<Messaging.SingleEmailMessage> emails = new List<Messaging.SingleEmailMessage>();
-        List<Id> InstructorIds = new List<Id>();
-        for(Opportunity course : courses){
-            if(course.Instructor__c!=Null){
-                InstructorIds.add(course.Instructor__c);
-            }
-        }
-        List<User> InstructorNames = [SELECT Name FROM USER WHERE Id IN :InstructorIds];
-        List<String> toAddresses = new List<String>();
-        toAddresses.add('t32.owen@gmail.com');    
-        for(Integer i=0; i<courses.size(); i++ ){
+        List<Opportunity> instructors = [SELECT Id, Name, Start_Date__c, StageName, Type, Instructor__r.Email, Instructor__r.Name FROM Opportunity WHERE Id IN :courses];
+        System.debug(instructors.size());
+        List<String> toAddresses = new List<String>();   
+        for(Opportunity course: instructors){
+            System.debug(course);
             String subject = 'Course Scheduled';
-            String body = 'Dear: '+InstructorNames[i].Name+',<br> You have a course of type: '+courses[i].Type+'<br> Scheduled on: '+courses[i].Start_Date__c;
-            if(isUpdate){
-                subject = 'Course Updated';
-                body = 'Dear: '+InstructorNames[i].Name+',<br> You have a course of type: '+courses[i].Type+'<br> This course has been rescheduled to: '+courses[i].Start_Date__c;
-                if(courses[i].StageName != oldMap.get(courses[i].Id).StageName && courses[i].StageName == 'Cancelled'){
-                    subject = 'Course Cancelled';
-                    body = 'Dear: '+InstructorNames[i].Name+',<br> You had a course of type: '+courses[i].Type+'<br> on: '+courses[i].Start_Date__c+'<br> This course was cancelled.';
-                }
+            String body = 'Dear: '+course.Instructor__r.Name+',<br> You have a course of type: '+course.Type+'<br> Scheduled on: '+course.Start_Date__c;
+            Boolean cancelledCheck = course.StageName != oldMap.get(course.Id).StageName && course.StageName == 'Cancelled'; 
+            if(isInsert){
+                toAddresses.add(course.Instructor__r.Email); 
+                Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
+                email.toAddresses = toAddresses;
+                email.setSubject(subject);
+                email.setHtmlBody(body);
+                emails.add(email);
+                System.debug(email);
+            }
+            if(isUpdate && cancelledCheck){
+                subject = 'Course Cancelled';
+                body = 'Dear: '+course.Instructor__r.Name+',<br> You had a course of type: '+course.Type+'<br> on: '+course.Start_Date__c+'<br> This course was cancelled.';
+                toAddresses.add(course.Instructor__r.Email); 
+                Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
+                email.toAddresses = toAddresses;
+                email.setSubject(subject);
+                email.setHtmlBody(body);
+                emails.add(email);
+                System.debug(email);
             }
             if(isDelete){
                 subject = 'Course Deleted';
-                body = 'Dear: '+InstructorNames[i].Name+',<br> You had a course of type: '+courses[i].Type+'<br> on: '+courses[i].Start_Date__c+'<br> This course was deleted.';
+                body = 'Dear: '+course.Instructor__r.Name+',<br> You had a course of type: '+course.Type+'<br> on: '+course.Start_Date__c+'<br> This course was deleted.';
+                toAddresses.add(course.Instructor__r.Email); 
+                Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
+                email.toAddresses = toAddresses;
+                email.setSubject(subject);
+                email.setHtmlBody(body);
+                emails.add(email);
+                System.debug(email);
             }
-            Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
-            email.toaddresses = toAddresses;
-            email.setSubject(subject);
-            email.setHtmlBody(body);
-            emails.add(email);
         }    
         Messaging.sendEmail(emails, false);
     }
