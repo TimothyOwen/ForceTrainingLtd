@@ -1,0 +1,19 @@
+<apex:page controller="SearchPreviousExpenseInvoices_CC" lightningStylesheets="true">
+    <h1>    Previous Expense Invoices</h1>
+    <apex:form>
+    <apex:pageBlock>
+        <apex:pageBlockTable var="Invoices" value="{!invoiceList}" >
+            <apex:column width="25px" headerValue="Select">
+                    <apex:inputCheckbox value="{!Invoices.checked}" />
+            </apex:column>
+            <apex:column value="{!Invoices.Invoice.Invoice_ID__c}" />
+            <apex:column value="{!Invoices.Invoice.Submitted_Date__c}" />
+            <apex:column value="{!Invoices.Invoice.Sub_Total__c}" />
+            <apex:column value="{!Invoices.Invoice.VAT__c}" />
+        </apex:pageBlockTable>
+        <apex:pageBlockButtons >
+                <apex:commandButton action="{!selectInvoice}" value="Clone Invoice"/>
+        </apex:pageBlockButtons>
+    </apex:pageBlock>
+    </apex:form>
+</apex:page>
