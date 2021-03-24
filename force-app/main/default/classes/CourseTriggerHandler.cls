@@ -29,8 +29,12 @@ public with sharing class CourseTriggerHandler {
                 calendarEventsToInsert.add(CalendarEvent);
             }
         }
-        delete [SELECT WhoId FROM Event WHERE WhatId = :calendarEventsToDelete];
-        insert calendarEventsToInsert;
+        if(calendarEventsToDelete.size()>0){
+            delete [SELECT WhoId FROM Event WHERE WhatId = :calendarEventsToDelete];
+        }
+        if(calendarEventsToInsert.size()>0){
+            insert calendarEventsToInsert;
+        }
     }
 
     public static void CourseEmail(List<Opportunity> courses, Map<Id, Opportunity> oldMap, Boolean isUpdate, Boolean isDelete){
