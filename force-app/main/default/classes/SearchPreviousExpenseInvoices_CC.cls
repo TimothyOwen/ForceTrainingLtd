@@ -21,11 +21,12 @@ public class SearchPreviousExpenseInvoices_CC {
     }
 
     public void selectInvoice() {
+        Id expenseRecTypeId = Schema.SObjectType.InvoiceC__c.getRecordTypeInfosByName().get('Expense').getRecordTypeId();
         //InvoiceC__c newInvoice = new InvoiceC__c();
         for (InvoiceWrapper iw : invoiceList) {
             if (iw.checked) {
                 System.debug('Course Selected: ' + iw.Invoice.Invoice_ID__C);
-                //newInvoice.RecordType = 'Expense';
+                //newInvoice.RecordTypeId = expenseRecTypeId;
                 //newInvoice.Course__c = ApexPages.currentPage().getParameters().get('id');
                 //newInvoice.Status = 'Scheduled';
                 //for(InvoiceLine__c invoiceLine: iw.Invoice.Invo)
