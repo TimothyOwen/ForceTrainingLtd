@@ -12,6 +12,7 @@
             <apex:column value="{!Invoices.Invoice.VAT__c}" />
         </apex:pageBlockTable>
         <apex:pageBlockButtons >
+                <apex:pageMessages id="errorMessage"/>
                 <apex:commandButton action="{!selectInvoice}" value="Clone Invoice"/>
         </apex:pageBlockButtons>
     </apex:pageBlock>

@@ -12,7 +12,7 @@ public with sharing class CourseTriggerHandler {
             try{
                 insert coursesToShare;
             }catch(DmlException e){
-                System.debug(e);
+                System.debug('Share: '+e);
             }
         }
     }      
@@ -39,18 +39,18 @@ public with sharing class CourseTriggerHandler {
             try{
                 delete [SELECT WhoId FROM Event WHERE WhatId IN :calendarEventIdsToDelete];
             }catch(DmlException e){
-                System.debug(e);
+                System.debug('Event: :'+e);
             }         
         }
         if(calendarEventsToInsert.size()>0){
             try{
                 insert calendarEventsToInsert;
             }catch(DmlException e){
-                System.debug(e);
+                System.debug('Event: :'+e);
             }
         }
     }
-
+    //NEEDS BULKIFYING
     public static void courseServiceInvoice(List<Opportunity> courses, Map<Id, Opportunity> oldMap){
         Id serviceRecordTypeId = Schema.SObjectType.InvoiceC__c.getRecordTypeInfosByName().get('Service').getRecordTypeId();
         Id lineServiceRecordTypeId = Schema.SObjectType.InvoiceLine__c.getRecordTypeInfosByName().get('Service').getRecordTypeId();
@@ -63,26 +63,23 @@ public with sharing class CourseTriggerHandler {
                 invoice.RecordTypeId = serviceRecordTypeId;
                 invoice.Course__c = course.Id;
                 invoice.Status__c = 'Draft';
-                invoicesToInsert.add(invoice);
-                Integer Duration = course.CloseDate - course.Start_Date__c;
-                for(Integer i ; i<Duration ; i++){
+                insert invoice;
+                Long Duration = course.Start_Date__c.daysBetween(course.CloseDate);
+                for(Integer i=0 ; i<Duration+1 ; i++){
                     InvoiceLine__c invoiceLine = new InvoiceLine__c();
-                    invoiceLine.
+                    invoiceLine.RecordTypeId = lineServiceRecordTypeId;
+                    invoiceLine.Date__c = course.Start_Date__c.addDays(i);
+                    invoiceLine.Invoice__c = invoice.Id;
+                    invoiceLine.Hours__c = 8;
+                    invoiceLinesToInsert.add(invoiceLine);
                 }
             }
         }
-        if(invoicesToInsert.size()>0){
-            try{
-                insert invoicesToInsert;
-            }catch(DmlException e){
-                System.debug(e);
-            }
-        } 
         if(invoiceLinesToInsert.size()>0){
             try{
                 insert invoiceLinesToInsert;
             }catch(DmlException e){
-                System.debug(e);
+                System.debug('Service: '+e);
             }
         }         
     }
@@ -131,10 +128,9 @@ public with sharing class CourseTriggerHandler {
         }   
         if(emails.size()>0){
             try{
-                System.debug(emails);
                 //Messaging.sendEmail(emails, false);
             }catch(Exception e){
-                System.debug(e);
+                System.debug('Email: '+e);
             }
         }
     }
