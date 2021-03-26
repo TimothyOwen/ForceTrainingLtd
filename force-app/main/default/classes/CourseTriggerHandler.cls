@@ -53,7 +53,9 @@ public with sharing class CourseTriggerHandler {
 
     public static void courseServiceInvoice(List<Opportunity> courses, Map<Id, Opportunity> oldMap){
         Id serviceRecordTypeId = Schema.SObjectType.InvoiceC__c.getRecordTypeInfosByName().get('Service').getRecordTypeId();
+        Id lineServiceRecordTypeId = Schema.SObjectType.InvoiceLine__c.getRecordTypeInfosByName().get('Service').getRecordTypeId();
         List<InvoiceC__c> invoicesToInsert = new List<InvoiceC__C>();
+        List<InvoiceLine__c> invoiceLinesToInsert = new List<InvoiceLine__c>();
         for(Opportunity course : courses){
             Boolean completedCheck = (course.StageName == 'Completed') && (course.StageName != oldMap.get(course.Id).StageName);
             if(completedCheck){           
@@ -62,6 +64,11 @@ public with sharing class CourseTriggerHandler {
                 invoice.Course__c = course.Id;
                 invoice.Status__c = 'Draft';
                 invoicesToInsert.add(invoice);
+                Integer Duration = course.CloseDate - course.Start_Date__c;
+                for(Integer i ; i<Duration ; i++){
+                    InvoiceLine__c invoiceLine = new InvoiceLine__c();
+                    invoiceLine.
+                }
             }
         }
         if(invoicesToInsert.size()>0){
@@ -70,7 +77,14 @@ public with sharing class CourseTriggerHandler {
             }catch(DmlException e){
                 System.debug(e);
             }
-        }        
+        } 
+        if(invoiceLinesToInsert.size()>0){
+            try{
+                insert invoiceLinesToInsert;
+            }catch(DmlException e){
+                System.debug(e);
+            }
+        }         
     }
 
     public static void courseEmail(List<Opportunity> courses, Map<Id, Opportunity> oldMap, Boolean isInsert, Boolean isUpdate, Boolean isDelete){
