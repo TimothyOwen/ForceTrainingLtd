@@ -1,4 +1,4 @@
-public with sharing class attachExtension_Test {
+public with sharing class AttachExtension_Test {
     public attachExtension_Test() {
 
     }

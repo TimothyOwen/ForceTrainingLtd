@@ -6,12 +6,12 @@ public class SearchPreviousExpenseInvoices_CC {
 
     public List<InvoiceWrapper> invoiceList{
         get{
-            Id expenseRecTypeId = Schema.SObjectType.InvoiceC__c.getRecordTypeInfosByName().get('Expense').getRecordTypeId();
+            Id expenseRecordTypeId = Schema.SObjectType.InvoiceC__c.getRecordTypeInfosByName().get('Expense').getRecordTypeId();
             //UNSUREcourse = [SELECT Id, Name, Amount FROM Opportunity WHERE Id = :ApexPages.currentPage().getParameters().get('id')];
             if(invoiceList == null){
                 invoiceList = new List<InvoiceWrapper>();
                 for(InvoiceC__c invoice : [SELECT Invoice_ID__C, Submitted_Date__c, Sub_Total__c, VAT__c 
-                                        FROM InvoiceC__c WHERE RecordTypeId = :expenseRecTypeId]){
+                                        FROM InvoiceC__c WHERE RecordTypeId = :expenseRecordTypeId]){
                     invoiceList.add(new InvoiceWrapper(invoice));
                 }
             }

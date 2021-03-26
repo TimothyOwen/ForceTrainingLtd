@@ -1,4 +1,4 @@
-public class attachExtension {
+public class AttachExtension {
     private final InvoiceC__c invoiceRecord;
     public attachExtension(ApexPages.StandardController stdController) {
         this.invoiceRecord = (InvoiceC__c)stdController.getRecord();

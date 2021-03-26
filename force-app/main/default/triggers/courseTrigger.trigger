@@ -1,4 +1,4 @@
-trigger courseTrigger on Opportunity (before insert, after insert, before update, after update, before delete, after delete) {
+trigger CourseTrigger on Opportunity (before insert, after insert, before update, after update, before delete, after delete, after undelete) {
     if(Trigger.isBefore){
         if(Trigger.isInsert){
 
@@ -12,16 +12,17 @@ trigger courseTrigger on Opportunity (before insert, after insert, before update
     }
     if(Trigger.isAfter){
         if(Trigger.isInsert){
-            CourseTriggerHandler.CourseShare(Trigger.new);
-            CourseTriggerHandler.CourseEvent(Trigger.new, Trigger.isUpdate);
-            CourseTriggerHandler.CourseEmail(Trigger.new, Trigger.oldMap, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete);
+            CourseTriggerHandler.courseShare(Trigger.new);
+            CourseTriggerHandler.courseEvent(Trigger.new, Trigger.isUpdate);
+            CourseTriggerHandler.courseEmail(Trigger.new, Trigger.oldMap, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete);
         }
         if(Trigger.isUpdate){
-            CourseTriggerHandler.CourseEvent(Trigger.new, Trigger.isUpdate);
-            CourseTriggerHandler.CourseEmail(Trigger.new, Trigger.oldMap, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete);
+            CourseTriggerHandler.courseEvent(Trigger.new, Trigger.isUpdate);
+            CourseTriggerHandler.courseServiceInvoice(Trigger.new, Trigger.oldMap);
+            CourseTriggerHandler.courseEmail(Trigger.new, Trigger.oldMap, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete);
         }
         if(Trigger.isDelete){
-            CourseTriggerHandler.CourseEmail(Trigger.old, Trigger.oldMap, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete);
+            CourseTriggerHandler.courseEmail(Trigger.old, Trigger.oldMap, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete);
         }
     }
 }
