@@ -2,6 +2,8 @@
 
 Fictional scenario of a Salesforce Training Partner requiring an invoice system for their sub-contractors. The Salesforce org will track the courses that they have scheduled, the trainers who will deliver tthem and the invoicing & expenses for each of their sub-contracting instructors.
 
+[JIRA](https://towen.atlassian.net/jira/software/c/projects/FT/boards)
+
 ## Courses
 
 ![ExampleCourse.png](docs/ExampleCourse.png)
