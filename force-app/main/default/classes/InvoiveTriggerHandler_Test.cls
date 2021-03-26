@@ -8,4 +8,12 @@ public class InvoiveTriggerHandler_Test {
     static void upddateInvoice(){
         
     }
+
+    // Salesforce reccomends you test the following:
+
+    // Single Actions
+    // Bulk Actions
+    // Positive Behaviour
+    // Negative Behaviour
+    // Restricted user
 }
