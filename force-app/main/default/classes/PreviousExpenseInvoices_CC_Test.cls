@@ -1,5 +1,5 @@
 @isTest
-public class SearchPreviousExpenseInvoices_CC_Test {
+public class PreviousExpenseInvoices_CC_Test {
     @TestSetup
     static void testData(){
         

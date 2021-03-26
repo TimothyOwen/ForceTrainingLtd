@@ -1,4 +1,4 @@
-<apex:page controller="SearchPreviousExpenseInvoices_CC" lightningStylesheets="true">
+<apex:page controller="PreviousExpenseInvoices_CC" lightningStylesheets="true">
     <apex:sectionHeader subtitle="{!course.Instructor__r.Name} Previous Expense Invoices"></apex:sectionHeader>
     <apex:form>
     <apex:pageBlock>
