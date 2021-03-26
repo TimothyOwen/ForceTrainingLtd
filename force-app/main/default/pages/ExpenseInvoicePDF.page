@@ -1,6 +1,6 @@
 <apex:page standardController="InvoiceC__c" renderAs="pdf">
     <apex:stylesheet value="{!$Resource.InvoiceCSS}" />
-    <apex:pageBlock>
+    <apex:pageBlock >
     <apex:image id="ForceTraining" value="{!$Resource.ForceTraining}" width="200" height="50" alt="Force Training"/>
     <p class="address">{!InvoiceC__c.Course__r.Account.BillingStreet}</p> 
     <p class="address">{!InvoiceC__c.Course__r.Account.BillingCity}</p> 

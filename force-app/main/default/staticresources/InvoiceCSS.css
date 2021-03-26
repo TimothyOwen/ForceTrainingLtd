@@ -1,0 +1,32 @@
+<style type="text/css">
+        .tableClass {
+                border-collapse: collapse;
+                width: 100%;
+                border: 0.5px solid black;
+        }
+         .theHead {
+                background-color: grey;  
+                color: black;
+         }
+         .theHead, .col, .box  {
+                border: 0.5px solid black;
+                text-align: left;
+                padding: 8px;   
+                font-size: 10pt;
+                font-family: arial, sans-serif;   
+         }
+         #ForceTraining {
+                align-items: right;
+         }
+         .invoice {
+                border: 0.3px solid grey;
+                font-size: 10pt;
+                font-family: aller, sans-serif;    
+         }
+         .address {           
+                font-size: 9pt;
+                font-family: aller, sans-serif; 
+                padding-left: 12px;
+                text-align: right
+         }
+ </style>

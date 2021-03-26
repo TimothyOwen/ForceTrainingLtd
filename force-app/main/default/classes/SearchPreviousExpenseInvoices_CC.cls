@@ -25,24 +25,17 @@ public class SearchPreviousExpenseInvoices_CC {
     public void selectInvoice() {
         Id expenseRecordTypeId = Schema.SObjectType.InvoiceC__c.getRecordTypeInfosByName().get('Expense').getRecordTypeId();
         InvoiceC__c invoice = new InvoiceC__c();
-        List<InvoiceLine__c> invoiceLinesToInsert = new List<InvoiceLine__c>();
         invoice.RecordTypeId = expenseRecordTypeId;
         Integer checkedCounter = 0;
         for (InvoiceWrapper iw : invoiceList) {
             if (iw.checked) {
                 checkedCounter += 1;
                 if(checkedCounter<2){
-                    //NEED TO PASS COURSE invoice.Course__c = course.Id;
+                    //invoice.Course__c = course.Id;
                     invoice.Status__c = 'Draft';
                     System.debug('Invoice: '+invoice);
                     for(InvoiceLine__c invoiceLine: [SELECT Date__c, Invoice__c, Miles_Travelled__c, Expense_Amount__c FROM InvoiceLine__c WHERE Invoice__c = :iw.Invoice.Id]){
                         System.debug('InvoiceLine: '+invoiceLine);
-                        InvoiceLine__c newInvoiceLine = new InvoiceLine__c();
-                        newInvoiceLine.RecordTypeId = invoiceLine.RecordTypeId;
-                        Integer dateDifference = Date.today() - course.Start_Date__c;
-                        newInvoiceLine.Date__c = invoiceLine.Date__c.addDays(dateDifference);
-                        newInvoiceLine.Miles_Travelled__c = invoiceLine.Miles_Travelled__c;
-                        newInvoiceLine.Expense_Amount__c = invoiceLine.Expense_Amount__c;
                     }
                 }
             }

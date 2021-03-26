@@ -1,6 +1,6 @@
 @isTest
 private class CourseTriggerHandler_Test{
-    @TestSetup
+    @testSetup
     static void testData(){
         
     }
