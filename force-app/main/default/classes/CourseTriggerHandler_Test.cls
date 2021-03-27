@@ -161,15 +161,15 @@ private class CourseTriggerHandler_Test{
     /*
     @isTest
     static void negativeInsertCourse(){
-
+        //Insert without required fields to trigger DML exceptions and catch
     }
     @isTest
     static void negativeUpdateCourse(){
-
+        //Insert without required fields to trigger DML exceptions
     }
     @isTest
     static void negativeDeleteCourse(){
-
+        //Insert without required fields to trigger DML exceptions
     }
     */
 }
