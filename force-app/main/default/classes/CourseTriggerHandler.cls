@@ -3,7 +3,7 @@ public with sharing class CourseTriggerHandler {
         List<OpportunityShare> coursesToShare = new List<OpportunityShare>();
         for( Opportunity course : courses) {
             OpportunityShare courseToShare = new OpportunityShare();
-            courseToShare.OpportunityID =  course.Id;
+            courseToShare.OpportunityId =  course.Id;
             courseToShare.OpportunityAccessLevel = 'Edit';
             courseToShare.UserOrGroupId = course.Instructor__c;
             coursesToShare.add(courseToShare);
@@ -63,7 +63,12 @@ public with sharing class CourseTriggerHandler {
                 invoice.RecordTypeId = serviceRecordTypeId;
                 invoice.Course__c = course.Id;
                 invoice.Status__c = 'Draft';
-                insert invoice;
+                //IMPROVE
+                try{
+                    insert invoice;
+                }catch(DmlException e){
+                    System.debug(e);
+                }
                 Long Duration = course.Start_Date__c.daysBetween(course.CloseDate);
                 for(Integer i=0 ; i<Duration+1 ; i++){
                     InvoiceLine__c invoiceLine = new InvoiceLine__c();
@@ -86,6 +91,7 @@ public with sharing class CourseTriggerHandler {
 
     public static void courseEmail(List<Opportunity> courses, Map<Id, Opportunity> oldMap, Boolean isInsert, Boolean isUpdate, Boolean isDelete){
         List<Messaging.SingleEmailMessage> emails = new List<Messaging.SingleEmailMessage>();
+        List<Email_Log__c> emailLogs = new List<Email_Log__c>();
         List<String> toAddresses = new List<String>(); 
         toAddresses.add('t32.owen@gmail.com');
         List<Opportunity> instructors = new List<Opportunity>();
@@ -96,13 +102,17 @@ public with sharing class CourseTriggerHandler {
         }
         for(Opportunity course: instructors){
             Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
+            Email_Log__c emailLog = new Email_Log__c();
             String subject = 'Course Scheduled';
             String body = 'Dear: '+course.Instructor__r.Name+',<br> You have a course of type: '+course.Type+'<br> Scheduled on: '+course.Start_Date__c;
             if(isInsert){
                 toAddresses.add(course.Instructor__r.Email); 
                 email.setSubject(subject);
+                emailLog.subject__c = email.getSubject();
                 email.setHtmlBody(body);
+                emailLog.body__c = email.getHtmlBody();
                 emails.add(email);
+                emailLogs.add(emailLog);
             }
             if(isUpdate){
                 Boolean cancelledCheck = (course.StageName != oldMap.get(course.Id).StageName) && (course.StageName == 'Cancelled');
@@ -112,8 +122,12 @@ public with sharing class CourseTriggerHandler {
                     toAddresses.add(course.Instructor__r.Email); 
                     email.toAddresses = toAddresses; 
                     email.setSubject(subject);
+                    emailLog.subject__c = email.getSubject();
                     email.setHtmlBody(body);
+                    emailLog.body__c = email.getHtmlBody();
                     emails.add(email);
+                    emailLogs.add(emailLog);
+                    
                 }
             }
             if(isDelete){
@@ -122,13 +136,17 @@ public with sharing class CourseTriggerHandler {
                 toAddresses.add(course.Instructor__r.Email); 
                 email.toAddresses = toAddresses; 
                 email.setSubject(subject);
+                emailLog.subject__c = email.getSubject();
                 email.setHtmlBody(body);
+                emailLog.body__c = email.getHtmlBody();
                 emails.add(email);
+                emailLogs.add(emailLog);
             }
         }   
         if(emails.size()>0){
             try{
                 //Messaging.sendEmail(emails, false);
+                insert emailLogs;
             }catch(Exception e){
                 System.debug('Email: '+e);
             }

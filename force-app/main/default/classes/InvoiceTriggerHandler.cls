@@ -12,6 +12,7 @@ public with sharing class InvoiceTriggerHandler {
                 }
                 vfPage.getParameters().put('id',invoice.Id);
                 vfPage.setRedirect(true);
+                //TRIGGER CANNOT GET CONTENT
                 //Blob body = vfPage.getContentAsPDF();
                 attachment.setFileName('Invoice.pdf');
                 //attachment.setBody('There is');
