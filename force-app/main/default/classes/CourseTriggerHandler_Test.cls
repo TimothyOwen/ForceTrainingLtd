@@ -42,8 +42,11 @@ private class CourseTriggerHandler_Test{
 
 
         //Course Event
-        System.assertEquals(calendarEventsToInsert.size(), [SELECT WhatId FROM Event].size());
-
+        List<Event> calendarEventsInserted =  [SELECT OwnerId FROM Event];
+        System.assertEquals(calendarEventsToInsert.size(),calendarEventsInserted.size());
+        for(Event calendarEventInserted : calendarEventsInserted){
+            System.assertEquals(testUser.Id, calendarEventInserted.OwnerId);
+        }
         //Course Email
         System.assertEquals(emails.size(), [SELECT Subject__c, Body__c FROM Email_Log__c].size());
 
@@ -127,8 +130,10 @@ private class CourseTriggerHandler_Test{
                                                         Start_Date__c=Date.today(),CloseDate=Date.today().addDays(5));
             coursesToInsert.add(courseToInsert);
             //Email
-            Email_Log__c emailLog = new Email_Log__c();
-            emailLogs.add(emailLog);
+            Email_Log__c emailLogForInsert = new Email_Log__c();
+            Email_Log__c emailLogForDelete = new Email_Log__c();
+            emailLogs.add(emailLogForInsert);
+            emailLogs.add(emailLogForDelete);
         }
         try{
             insert coursesToInsert;
@@ -136,19 +141,15 @@ private class CourseTriggerHandler_Test{
             System.debug(e);
         }
         //
-        List<Opportunity> coursesToDelete = [SELECT Id, Name, CloseDate FROM Opportunity WHERE StageName = 'Scheduled'];
-        System.debug(coursesToDelete);
+        List<Opportunity> coursesToDelete = [SELECT Id FROM Opportunity WHERE StageName = 'Scheduled'];
         System.Test.startTest();
-        delete coursesToInsert;
-        //List<Database.DeleteResult> results3 = Database.delete(coursesToDelete, true);
+        List<Database.DeleteResult> results3 = Database.delete(coursesToDelete, true);
         System.Test.stopTest();
         //
-        /*
         for(Database.DeleteResult result : results3){
             System.assert(result.isSuccess());
             System.assert(result.getErrors().size() == 0);
         }
-        */
         //Course Email
         System.assertEquals(emailLogs.size(), [SELECT Subject__c, Body__c FROM Email_Log__c].size());  
     }

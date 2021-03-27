@@ -67,7 +67,7 @@ public with sharing class CourseTriggerHandler {
                 try{
                     insert invoice;
                 }catch(DmlException e){
-                    System.debug(e);
+                    System.debug('Invoice: '+e);
                 }
                 Long Duration = course.Start_Date__c.daysBetween(course.CloseDate);
                 for(Integer i=0 ; i<Duration+1 ; i++){
@@ -84,7 +84,7 @@ public with sharing class CourseTriggerHandler {
             try{
                 insert invoiceLinesToInsert;
             }catch(DmlException e){
-                System.debug('Service: '+e);
+                System.debug('Service Lines: '+e);
             }
         }         
     }

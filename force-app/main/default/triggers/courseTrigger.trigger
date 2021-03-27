@@ -7,7 +7,7 @@ trigger CourseTrigger on Opportunity (before insert, after insert, before update
 
         }
         if(Trigger.isDelete){
-            
+            CourseTriggerHandler.courseEmail(Trigger.old, Trigger.oldMap, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete);
         }
     }
     if(Trigger.isAfter){
@@ -17,12 +17,12 @@ trigger CourseTrigger on Opportunity (before insert, after insert, before update
             CourseTriggerHandler.courseEmail(Trigger.new, Trigger.oldMap, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete);
         }
         if(Trigger.isUpdate){
-            CourseTriggerHandler.courseEvent(Trigger.new, Trigger.isUpdate);
             CourseTriggerHandler.courseServiceInvoice(Trigger.new, Trigger.oldMap);
+            CourseTriggerHandler.courseEvent(Trigger.new, Trigger.isUpdate);
             CourseTriggerHandler.courseEmail(Trigger.new, Trigger.oldMap, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete);
         }
         if(Trigger.isDelete){
-            CourseTriggerHandler.courseEmail(Trigger.old, Trigger.oldMap, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete);
+            
         }
     }
 }
