@@ -1,22 +1,28 @@
-# Force Training
+![ForceTraining.png](docs/ForceTraining.png)
 
-Coverage: 95%
+**Unit Testing Coverage: 95%**
 
-[JIRA](https://towen.atlassian.net/jira/software/c/projects/FT/boards)
+[JIRA Link](https://towen.atlassian.net/jira/software/c/projects/FT/boards)
 
-Fictional scenario of a Salesforce Training Partner requiring an invoice system for their sub-contractors. The Salesforce org will track the courses that they have scheduled, the trainers who will deliver tthem and the invoicing & expenses for each of their sub-contracting instructors.
+Fictional scenario of a Salesforce Training Partner requiring an invoice system for their sub-contractors. The Salesforce org will track the courses that they have scheduled, the trainers who will deliver them and the invoicing & expenses for each of their sub-contracting instructors.
 
-## Schema
+## Schema  
+
+The org utilizes the standard object of Opportunity, renaming it Course. Three custom objects have been created, Course Rate (Course_Rate__c), Invoice (InvoiceC__c), and Invoice Line (InvoiceLine__c). The email log (Email_Log__c) custom object has also been created, to help with testing triggers that send emails.
 
 ![Schema.png](docs/Schema.png)
 
-## Courses
+## Course Example
 
 ![ExampleCourse.png](docs/ExampleCourse.png)
 
-## Invoices
+## Invoice Example
 
 ![ExampleInvoice.png](docs/ExampleInvoice.png)
+
+## Invoice PDF Example
+
+![ExamplePDF.png](docs/ExamplePDF.png)
 
 ## Clone Previous Expense Invoices
 
