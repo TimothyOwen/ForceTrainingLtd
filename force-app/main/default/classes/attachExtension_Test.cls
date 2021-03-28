@@ -16,7 +16,7 @@ public with sharing class AttachExtension_Test {
         InvoiceC__c testInvoice = [SELECT Id, Invoice_ID__c FROM InvoiceC__c LIMIT 1];
         ApexPages.StandardController standardController = new ApexPages.StandardController(testInvoice);
         ApexPages.currentPage().getParameters().put('id',testInvoice.Id);
-        AttachExtension attachExtension = new AttachExtension(standardController);
+        AttachExtension attachExtension = new AttachExtension(standardController); 
         PageReference recieved = attachExtension.attachPDF();
         List<Attachment> attachments = [SELECT Name FROM Attachment];
         //

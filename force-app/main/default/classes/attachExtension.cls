@@ -14,7 +14,7 @@ public class AttachExtension {
         try{
             body = pdf.getContent();
         }catch(Exception e){
-            body = Blob.valueOf('Exception occurred');
+            body = Blob.valueOf('Exception occurred'); 
             System.debug('GetContent: '+e);
         }
         attachment.Body = body;
