@@ -4,12 +4,12 @@ public class InvoiveTriggerHandler_Test {
     static void testData(){
         
     }
-    /*
+
     @isTest
-    static void upddateInvoice(){
+    static void positiveCaseUpdate(){
         
     }
-    */
+
     // Salesforce reccomends you test the following:
 
     // Single Actions

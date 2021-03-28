@@ -1,16 +1,22 @@
 public class AttachExtension {
     private final InvoiceC__c invoiceRecord;
-    public attachExtension(ApexPages.StandardController stdController) {
-        this.invoiceRecord = (InvoiceC__c)stdController.getRecord();
+    public AttachExtension(ApexPages.StandardController standardController) {
+        this.invoiceRecord = (InvoiceC__c) standardController.getRecord();
     }
     public PageReference attachPDF(){
         List<InvoiceC__c> invoices = [Select RecordType.Name, Invoice_ID__c, Course__r.Id from InvoiceC__c WHERE Id = :invoiceRecord.Id];
         InvoiceC__c invoice = invoices[0];
+        System.debug(invoice);
         String partialURL = '/apex/'+invoice.RecordType.Name+'InvoicePDF?id='+invoice.Id;  
         PageReference pdf = new PageReference(partialURL);
         Attachment attachment = new Attachment();
         Blob body;
-        body = pdf.getContent();
+        try{
+            body = pdf.getContent();
+        }catch(Exception e){
+            body = Blob.valueOf('Exception occurred');
+            System.debug('GetContent: '+e);
+        }
         attachment.Body = body;
         attachment.Name = 'Invoice: '+invoice.Invoice_ID__c;
         attachment.isPrivate = false;

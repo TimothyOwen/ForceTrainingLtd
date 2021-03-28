@@ -7,7 +7,7 @@ private class CourseTriggerHandler_Test{
     }
     
     @isTest
-    static void positiveInsertCourse(){
+    static void positiveCaseInsert(){
         User testUser = [SELECT FirstName FROM User WHERE Username = 'mstev@forcetraining.com'];
         //
         List<Opportunity> coursesToInsert = new List<Opportunity>();
@@ -60,7 +60,7 @@ private class CourseTriggerHandler_Test{
 
 
     @isTest
-    static void positiveUpdateCourse(){
+    static void positiveCaseUpdate(){
         User testUser = [SELECT FirstName FROM User WHERE Username = 'mstev@forcetraining.com'];
         //
         List<Opportunity> coursesToInsert = new List<Opportunity>();
@@ -119,7 +119,7 @@ private class CourseTriggerHandler_Test{
 
 
     @isTest
-    static void positiveDeleteCourse(){
+    static void positiveCaseDelete(){
         User testUser = [SELECT FirstName FROM User WHERE Username = 'mstev@forcetraining.com'];
         //
         List<Opportunity> coursesToInsert = new List<Opportunity>();
