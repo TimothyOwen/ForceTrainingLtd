@@ -20,6 +20,6 @@ Fictional scenario of a Salesforce Training Partner requiring an invoice system 
 
 ## Clone Previous Expense Invoices
 
-Visualforce page that let's an instructor see a list of their previous expense invoices. They can then clone a specific expense invoice for the course that they are currently viewing.
+Visualforce page that let's an instructor see a list of their previous expense invoices. They can then clone a specific expense invoice, including all of it's related invoice line items, for the course that they are currently viewing.
 
 ![CloneExpense.png](docs/CloneExpense.png)
