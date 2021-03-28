@@ -1,12 +1,13 @@
 ![ForceTraining.png](docs/ForceTraining.png)
 
+Fictional scenario of a Salesforce Training Partner requiring an invoice system for their sub-contractors. The Salesforce org will track the courses that they have scheduled, the trainers who will deliver them and the invoicing & expenses for each of their sub-contracting instructors.
+
+
 **Unit Testing Coverage: 95%**
 
 
 [JIRA Link](https://towen.atlassian.net/jira/software/c/projects/FT/boards)
 
-
-Fictional scenario of a Salesforce Training Partner requiring an invoice system for their sub-contractors. The Salesforce org will track the courses that they have scheduled, the trainers who will deliver them and the invoicing & expenses for each of their sub-contracting instructors.
 
 
 ## Schema  
