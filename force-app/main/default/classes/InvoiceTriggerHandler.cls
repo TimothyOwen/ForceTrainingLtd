@@ -1,5 +1,5 @@
 public with sharing class InvoiceTriggerHandler {
-    public static void sendEmailWithInvoice(List<InvoiceC__c> newInvoices, Map<Id, InvoiceC__c> oldMap){
+    public static void invoiceEmail(List<InvoiceC__c> newInvoices, Map<Id, InvoiceC__c> oldMap){
         for(InvoiceC__c invoice : newInvoices){
             if(invoice.Status__c == 'Submitted' && invoice.Status__c != oldMap.get(invoice.Id).Status__c){
                 Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
@@ -12,6 +12,7 @@ public with sharing class InvoiceTriggerHandler {
                 }
                 vfPage.getParameters().put('id',invoice.Id);
                 vfPage.setRedirect(true);
+                //TRIGGER CANNOT GET CONTENT
                 //Blob body = vfPage.getContentAsPDF();
                 attachment.setFileName('Invoice.pdf');
                 //attachment.setBody('There is');

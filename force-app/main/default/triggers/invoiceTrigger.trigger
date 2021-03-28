@@ -1,4 +1,4 @@
-trigger invoiceTrigger on InvoiceC__C (before insert, after insert, before update, after update, before delete, after delete) {
+trigger InvoiceTrigger on InvoiceC__C (before insert, after insert, before update, after update, before delete, after delete, after undelete) {
     if(Trigger.isBefore){
         if(Trigger.isInsert){
 
@@ -15,7 +15,7 @@ trigger invoiceTrigger on InvoiceC__C (before insert, after insert, before updat
             
         }
         if(Trigger.isUpdate){
-            //InvoiceTriggerHandler.sendEmailWithInvoice(Trigger.new, Trigger.oldMap);
+            //InvoiceTriggerHandler.invoiceEmail(Trigger.new, Trigger.oldMap);
         }
         if(Trigger.isDelete){
            

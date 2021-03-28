@@ -1,21 +1,27 @@
 public with sharing class CourseTriggerHandler {
-    public static void CourseShare(List<Opportunity> courses){
+    public static void courseShare(List<Opportunity> courses){
         List<OpportunityShare> coursesToShare = new List<OpportunityShare>();
         for( Opportunity course : courses) {
             OpportunityShare courseToShare = new OpportunityShare();
-            courseToShare.OpportunityID =  course.Id;
+            courseToShare.OpportunityId =  course.Id;
             courseToShare.OpportunityAccessLevel = 'Edit';
             courseToShare.UserOrGroupId = course.Instructor__c;
             coursesToShare.add(courseToShare);
         }
-        insert coursesToShare;
+        if(coursesToShare.size()>0){
+            try{
+                insert coursesToShare;
+            }catch(DmlException e){
+                System.debug('Share: '+e);
+            }
+        }
     }      
-    public static void CourseEvent(List<Opportunity> newCourses, Boolean isUpdate){
+    public static void courseEvent(List<Opportunity> courses, Boolean isUpdate){
         List<Event> calendarEventsToInsert = new List<Event>();
-        Set<Id> calendarEventsToDelete = new Set<Id>();
-        for(Opportunity course : newCourses){
+        Set<Id> calendarEventIdsToDelete = new Set<Id>();
+        for(Opportunity course : courses){
             Event calendarEvent = new Event();
-            calendarEvent.Subject = 'Course';
+            calendarEvent.Subject = course.Name;
             calendarEvent.StartDateTime = course.Start_Date__c;
             calendarEvent.EndDateTime = course.CloseDate;
             calendarEvent.OwnerId = course.Instructor__c;
@@ -23,62 +29,127 @@ public with sharing class CourseTriggerHandler {
             calendarEvent.Type = course.Type;
             calendarEvent.WhatId = course.Id;
             if(isUpdate){
-                calendarEventsToDelete.add(course.Id);
+                calendarEventIdsToDelete.add(course.Id);
             }
             if(course.StageName != 'Cancelled'){
                 calendarEventsToInsert.add(CalendarEvent);
             }
         }
-        if(calendarEventsToDelete.size()>0){
-            delete [SELECT WhoId FROM Event WHERE WhatId = :calendarEventsToDelete];
+        if(calendarEventIdsToDelete.size()>0){
+            try{
+                delete [SELECT WhoId FROM Event WHERE WhatId IN :calendarEventIdsToDelete];
+            }catch(DmlException e){
+                System.debug('Event: :'+e);
+            }         
         }
         if(calendarEventsToInsert.size()>0){
-            insert calendarEventsToInsert;
+            try{
+                insert calendarEventsToInsert;
+            }catch(DmlException e){
+                System.debug('Event: :'+e);
+            }
         }
     }
+    //NEEDS BULKIFYING
+    public static void courseServiceInvoice(List<Opportunity> courses, Map<Id, Opportunity> oldMap){
+        Id serviceRecordTypeId = Schema.SObjectType.InvoiceC__c.getRecordTypeInfosByName().get('Service').getRecordTypeId();
+        Id lineServiceRecordTypeId = Schema.SObjectType.InvoiceLine__c.getRecordTypeInfosByName().get('Service').getRecordTypeId();
+        List<InvoiceC__c> invoicesToInsert = new List<InvoiceC__C>();
+        List<InvoiceLine__c> invoiceLinesToInsert = new List<InvoiceLine__c>();
+        for(Opportunity course : courses){
+            Boolean completedCheck = (course.StageName == 'Completed') && (course.StageName != oldMap.get(course.Id).StageName);
+            if(completedCheck){           
+                InvoiceC__c invoice = new InvoiceC__c();
+                invoice.RecordTypeId = serviceRecordTypeId;
+                invoice.Course__c = course.Id;
+                invoice.Status__c = 'Draft';
+                //IMPROVE
+                try{
+                    insert invoice;
+                }catch(DmlException e){
+                    System.debug('Invoice: '+e);
+                }
+                Long Duration = course.Start_Date__c.daysBetween(course.CloseDate);
+                for(Integer i=0 ; i<Duration+1 ; i++){
+                    InvoiceLine__c invoiceLine = new InvoiceLine__c();
+                    invoiceLine.RecordTypeId = lineServiceRecordTypeId;
+                    invoiceLine.Date__c = course.Start_Date__c.addDays(i);
+                    invoiceLine.Invoice__c = invoice.Id;
+                    invoiceLine.Hours__c = 8;
+                    invoiceLinesToInsert.add(invoiceLine);
+                }
+            }
+        }
+        if(invoiceLinesToInsert.size()>0){
+            try{
+                insert invoiceLinesToInsert;
+            }catch(DmlException e){
+                System.debug('Service Lines: '+e);
+            }
+        }         
+    }
 
-    public static void CourseEmail(List<Opportunity> courses, Map<Id, Opportunity> oldMap, Boolean isInsert, Boolean isUpdate, Boolean isDelete){
+    public static void courseEmail(List<Opportunity> courses, Map<Id, Opportunity> oldMap, Boolean isInsert, Boolean isUpdate, Boolean isDelete){
         List<Messaging.SingleEmailMessage> emails = new List<Messaging.SingleEmailMessage>();
-        List<Opportunity> instructors = [SELECT Id, Name, Start_Date__c, StageName, Type, Instructor__r.Email, Instructor__r.Name FROM Opportunity WHERE Id IN :courses];
-        System.debug(instructors.size());
-        List<String> toAddresses = new List<String>();   
+        List<Email_Log__c> emailLogs = new List<Email_Log__c>();
+        List<String> toAddresses = new List<String>(); 
+        toAddresses.add('t32.owen@gmail.com');
+        List<Opportunity> instructors = new List<Opportunity>();
+        try{
+            instructors = [SELECT Id, Name, Start_Date__c, StageName, Type, Instructor__r.Email, Instructor__r.Name FROM Opportunity WHERE Id IN :courses];
+        }catch(DmlException e){
+            System.debug(e);
+        }
         for(Opportunity course: instructors){
-            System.debug(course);
+            Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
+            Email_Log__c emailLog = new Email_Log__c();
             String subject = 'Course Scheduled';
             String body = 'Dear: '+course.Instructor__r.Name+',<br> You have a course of type: '+course.Type+'<br> Scheduled on: '+course.Start_Date__c;
-            Boolean cancelledCheck = course.StageName != oldMap.get(course.Id).StageName && course.StageName == 'Cancelled'; 
             if(isInsert){
                 toAddresses.add(course.Instructor__r.Email); 
-                Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
-                email.toAddresses = toAddresses;
                 email.setSubject(subject);
+                emailLog.subject__c = email.getSubject();
                 email.setHtmlBody(body);
+                emailLog.body__c = email.getHtmlBody();
                 emails.add(email);
-                System.debug(email);
+                emailLogs.add(emailLog);
             }
-            if(isUpdate && cancelledCheck){
-                subject = 'Course Cancelled';
-                body = 'Dear: '+course.Instructor__r.Name+',<br> You had a course of type: '+course.Type+'<br> on: '+course.Start_Date__c+'<br> This course was cancelled.';
-                toAddresses.add(course.Instructor__r.Email); 
-                Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
-                email.toAddresses = toAddresses;
-                email.setSubject(subject);
-                email.setHtmlBody(body);
-                emails.add(email);
-                System.debug(email);
+            if(isUpdate){
+                Boolean cancelledCheck = (course.StageName != oldMap.get(course.Id).StageName) && (course.StageName == 'Cancelled');
+                if(cancelledCheck){
+                    subject = 'Course Cancelled';
+                    body = 'Dear: '+course.Instructor__r.Name+',<br> You had a course of type: '+course.Type+'<br> On: '+course.Start_Date__c+'<br> This course was cancelled.';
+                    toAddresses.add(course.Instructor__r.Email); 
+                    email.toAddresses = toAddresses; 
+                    email.setSubject(subject);
+                    emailLog.subject__c = email.getSubject();
+                    email.setHtmlBody(body);
+                    emailLog.body__c = email.getHtmlBody();
+                    emails.add(email);
+                    emailLogs.add(emailLog);
+                    
+                }
             }
             if(isDelete){
                 subject = 'Course Deleted';
-                body = 'Dear: '+course.Instructor__r.Name+',<br> You had a course of type: '+course.Type+'<br> on: '+course.Start_Date__c+'<br> This course was deleted.';
+                body = 'Dear: '+course.Instructor__r.Name+',<br> You had a course of type: '+course.Type+'<br> On: '+course.Start_Date__c+'<br> This course was deleted.';
                 toAddresses.add(course.Instructor__r.Email); 
-                Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
-                email.toAddresses = toAddresses;
+                email.toAddresses = toAddresses; 
                 email.setSubject(subject);
+                emailLog.subject__c = email.getSubject();
                 email.setHtmlBody(body);
+                emailLog.body__c = email.getHtmlBody();
                 emails.add(email);
-                System.debug(email);
+                emailLogs.add(emailLog);
             }
-        }    
-        Messaging.sendEmail(emails, false);
+        }   
+        if(emails.size()>0){
+            try{
+                //Messaging.sendEmail(emails, false);
+                insert emailLogs;
+            }catch(Exception e){
+                System.debug('Email: '+e);
+            }
+        }
     }
 }
