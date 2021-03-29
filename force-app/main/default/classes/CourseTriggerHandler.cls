@@ -9,11 +9,7 @@ public with sharing class CourseTriggerHandler {
             coursesToShare.add(courseToShare);
         }
         if(coursesToShare.size()>0){
-            try{
-                insert coursesToShare;
-            }catch(DmlException e){
-                System.debug('Share: '+e);
-            }
+            insert coursesToShare;
         }
     }      
     public static void courseEvent(List<Opportunity> courses, Boolean isUpdate){
@@ -36,18 +32,10 @@ public with sharing class CourseTriggerHandler {
             }
         }
         if(calendarEventIdsToDelete.size()>0){
-            try{
-                delete [SELECT WhoId FROM Event WHERE WhatId IN :calendarEventIdsToDelete];
-            }catch(DmlException e){
-                System.debug('Event: :'+e);
-            }         
+            delete [SELECT WhoId FROM Event WHERE WhatId IN :calendarEventIdsToDelete];         
         }
         if(calendarEventsToInsert.size()>0){
-            try{
-                insert calendarEventsToInsert;
-            }catch(DmlException e){
-                System.debug('Event: :'+e);
-            }
+            insert calendarEventsToInsert;
         }
     }
     //NEEDS BULKIFYING
@@ -64,11 +52,8 @@ public with sharing class CourseTriggerHandler {
                 invoice.Course__c = course.Id;
                 invoice.Status__c = 'Draft';
                 //IMPROVE
-                try{
-                    insert invoice;
-                }catch(DmlException e){
-                    System.debug('Invoice: '+e);
-                }
+                insert invoice;
+                //
                 Long Duration = course.Start_Date__c.daysBetween(course.CloseDate);
                 for(Integer i=0 ; i<Duration+1 ; i++){
                     InvoiceLine__c invoiceLine = new InvoiceLine__c();
@@ -81,11 +66,7 @@ public with sharing class CourseTriggerHandler {
             }
         }
         if(invoiceLinesToInsert.size()>0){
-            try{
-                insert invoiceLinesToInsert;
-            }catch(DmlException e){
-                System.debug('Service Lines: '+e);
-            }
+            insert invoiceLinesToInsert;
         }         
     }
 
@@ -95,11 +76,8 @@ public with sharing class CourseTriggerHandler {
         List<String> toAddresses = new List<String>(); 
         toAddresses.add('t32.owen@gmail.com');
         List<Opportunity> instructors = new List<Opportunity>();
-        try{
-            instructors = [SELECT Id, Name, Start_Date__c, StageName, Type, Instructor__r.Email, Instructor__r.Name FROM Opportunity WHERE Id IN :courses];
-        }catch(DmlException e){
-            System.debug(e);
-        }
+        instructors = [SELECT Id, Name, Start_Date__c, StageName, Type, Instructor__r.Email, Instructor__r.Name FROM Opportunity WHERE Id IN :courses];
+        
         for(Opportunity course: instructors){
             Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
             Email_Log__c emailLog = new Email_Log__c();
@@ -144,12 +122,8 @@ public with sharing class CourseTriggerHandler {
             }
         }   
         if(emails.size()>0){
-            try{
-                //Messaging.sendEmail(emails, false);
-                insert emailLogs;
-            }catch(Exception e){
-                System.debug('Email: '+e);
-            }
+            //Messaging.sendEmail(emails, false);
+            insert emailLogs;
         }
     }
 }
