@@ -15,7 +15,7 @@ trigger InvoiceTrigger on InvoiceC__C (before insert, after insert, before updat
             
         }
         if(Trigger.isUpdate){
-            //InvoiceTriggerHandler.invoiceEmail(Trigger.new, Trigger.oldMap);
+            InvoiceTriggerHandler.invoiceEmail(Trigger.new, Trigger.oldMap);
         }
         if(Trigger.isDelete){
            
