@@ -1,30 +1,37 @@
 <apex:page standardController="InvoiceC__c" renderAs="pdf">
     <apex:stylesheet value="{!$Resource.InvoiceCSS}" />
     <apex:pageBlock>
-    <apex:image id="ForceTraining" value="{!$Resource.ForceTraining}" width="200" height="50" alt="Force Training"/>
+    <apex:image id="ForceTraining" value="{!$Resource.ForceTraining}" width="250" height="50" alt="Force Training"/>
+    <div class="address">
+    <apex:outputText value="{0, date, 'Submitted: ' d MMMM',' yyyy}"><apex:param value="{!InvoiceC__c.Submitted_Date__c}" /></apex:outputText>
+    </div>
+    <br></br>
     <p class="address">{!InvoiceC__c.Course__r.Account.BillingStreet}</p> 
     <p class="address">{!InvoiceC__c.Course__r.Account.BillingCity}</p> 
     <p class="address">{!InvoiceC__c.Course__r.Account.BillingPostalCode}</p> 
     <p class="address">{!InvoiceC__c.Course__r.Account.BillingCountry}</p> 
+    <br></br>
     <div class="box">
         <p><b>Invoice ID</b>: {!InvoiceC__c.Invoice_ID__c}<br></br></p> 
         <p><b>Instructor Full Name</b>: {!InvoiceC__c.Course__r.Instructor__r.Name}<br></br></p>
         <p><b>Course</b>: {!InvoiceC__c.Course__r.Name}<br></br></p>
     </div>
-    <apex:dataTable value="{!InvoiceC__c.Invoice_Lines__r}" var="InvoiceLine" id="table1" headerClass="theHead" rowClasses="odd,even" styleClass="tableClass">
+    <br></br>
+    <apex:dataTable value="{!InvoiceC__c.Invoice_Lines__r}" var="InvoiceLine" id="table1" headerClass="theHead" rowClasses="odd,even" styleClass="tableClass" width="100%">
     <apex:column styleClass="col">
         <apex:facet name="header">Course Type</apex:facet>
         <apex:outputText value="{!InvoiceLine.Invoice__r.Course__r.Type}"/>
     </apex:column>
     <apex:column styleClass="col">
         <apex:facet name="header">Date</apex:facet>
-        <apex:outputText value="{!InvoiceLine.Date__c}"/>
+        <apex:outputText value="{0, date,dd'-'MM'-'yyyy}"><apex:param value="{!InvoiceLine.Date__c}"/></apex:outputText>
     </apex:column>
     <apex:column styleClass="col">
         <apex:facet name="header">Service Hours</apex:facet>
         <apex:outputText value="{!InvoiceLine.Hours__c}"/>
     </apex:column>
     </apex:dataTable>
+    <br></br>
     <div class="box">
         <p class="invoice">Total Service Hours: {!InvoiceC__c.Total_Service_Hours__c}<br></br></p>
         <p class="invoice"><b>Sub Total:</b> £{!InvoiceC__c.Sub_Total__c}<br></br></p> 
