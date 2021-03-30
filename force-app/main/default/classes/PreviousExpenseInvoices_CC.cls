@@ -58,20 +58,12 @@ public class PreviousExpenseInvoices_CC {
             ApexPages.Message errorMessage = new ApexPages.Message(ApexPages.severity.INFO, detail);
             ApexPages.addMessage(errorMessage);
         }else{
-            try{
-                insert invoice;
-                String url = '/lightning/r/Opportunity/'+invoice.Id+'/view';
-                page = new PageReference(url);
-            }catch(DmlException e){
-                System.debug(e);
-            }
+            insert invoice;
+            String url = '/lightning/r/Opportunity/'+invoice.Id+'/view';
+            page = new PageReference(url);
             for(InvoiceLine__c invoiceLine : invoiceLinesToInsert){invoiceLine.Invoice__c = invoice.Id;}
             if(invoiceLinesToInsert.size()>0){
-                try{
-                    insert invoiceLinesToInsert;
-                }catch(DmlException e){
-                    System.debug(e);
-                }
+                insert invoiceLinesToInsert;
             } 
         }
         return page;

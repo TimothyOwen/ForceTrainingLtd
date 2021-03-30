@@ -3,7 +3,7 @@
     <apex:pageBlock>
     <apex:image id="ForceTraining" value="{!$Resource.ForceTraining}" width="250" height="50" alt="Force Training"/>
     <div class="address">
-    <apex:outputText value="{0, date, 'Submitted: ' d MMMM',' yyyy}"><apex:param value="{!InvoiceC__c.Submitted_Date__c}" /></apex:outputText>
+    <apex:outputText value="{0, date, 'Generated: ' d MMMM',' yyyy}"><apex:param value="{!InvoiceC__c.Date_Today__c}" /></apex:outputText>
     </div>
     <br></br>
     <p class="address">{!InvoiceC__c.Course__r.Account.BillingStreet}</p> 
@@ -35,6 +35,7 @@
     <div class="box">
         <p class="invoice">Total Service Hours: {!InvoiceC__c.Total_Service_Hours__c}<br></br></p>
         <p class="invoice"><b>Sub Total:</b> £{!InvoiceC__c.Sub_Total__c}<br></br></p> 
+        <p class="invoice"><b>Income Tax:</b> £{!InvoiceC__c.Income_Tax_Service__c}<br></br></p>  
         <p class="invoice"><b>VAT:</b> £{!InvoiceC__c.VAT__c}<br></br></p>  
     </div>
     </apex:pageBlock>

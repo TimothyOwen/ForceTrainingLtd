@@ -20,11 +20,7 @@ public class AttachExtension {
         attachment.isPrivate = false;
         attachment.ParentId = invoice.Course__r.Id;
         List<Attachment> oldAttachments = new List<Attachment>();
-        try{
-            oldAttachments = [SELECT Name FROM Attachment WHERE Name = :attachment.Name];
-        }catch(Exception e){
-            System.debug('GetAttachments: '+e);
-        }
+        oldAttachments = [SELECT Name FROM Attachment WHERE Name = :attachment.Name];
         if(oldAttachments.size() == 0){
             insert attachment;
         }else{
