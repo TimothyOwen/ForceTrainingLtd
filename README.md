@@ -2,6 +2,12 @@
 
 Fictional scenario of a Salesforce Training Partner requiring an invoice system for their sub-contractors. The Salesforce org will track the courses that they have scheduled, the trainers who will deliver them and the invoicing & expenses for each of their sub-contracting trainers.
 
+**Custom Apex Classes:**
+* Trigger for Opportunity object - ```CourseTrigger```, ```CourseTriggerHandler```
+* Trigger for Invoice custom object - ```InvoiceTrigger```, ```InvoiceTriggerHandler```
+* Custom Extension - ```AttachExtension```
+* Custom Controller - ```PreviousExpenseInvoices_CC```
+* Visualforce Pages - ```AttachInvoicePDF```, ```ExpenseInvoicePDF```, ```ServiceInvoicePDF```,```PreviousExpenseInvoices```
 
 **Unit Test Coverage: 95%**
 
