@@ -18,7 +18,7 @@ Includes unit tests for each .cls
 
 
 
-## Schema  
+## Org Structure  
 
 The org utilizes the standard object of Opportunity, renaming it Course. Three custom objects have been created, Course Rate (Course_Rate__c), Invoice (InvoiceC__c), and Invoice Line (InvoiceLine__c). The email log (Email_Log__c) custom object has also been created, to help with testing triggers that send emails.
 
