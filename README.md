@@ -3,11 +3,13 @@
 Fictional scenario of a Salesforce Training Partner requiring an invoice system for their sub-contractors. The Salesforce org will track the courses that they have scheduled, the trainers who will deliver them and the invoicing & expenses for each of their sub-contracting trainers.
 
 **Custom Apex Classes:**
-* Trigger for Opportunity object - ```CourseTrigger```, ```CourseTriggerHandler```
-* Trigger for Invoice custom object - ```InvoiceTrigger```, ```InvoiceTriggerHandler```
-* Custom Extension - ```AttachExtension```
-* Custom Controller - ```PreviousExpenseInvoices_CC```
-* Visualforce Pages - ```AttachInvoicePDF```, ```ExpenseInvoicePDF```, ```ServiceInvoicePDF```,```PreviousExpenseInvoices```
+* Apex sharing, send emails, create/update events - ```CourseTrigger.trigger```, ```CourseTriggerHandler.cls```
+* Email attachment - ```InvoiceTrigger.trigger```, ```InvoiceTriggerHandler.cls```
+* Generate invoice PDF - ```ExpenseInvoicePDF.page```, ```ServiceInvoicePDF.page```
+* Attach invoice PDF to parent course - ```AttachExtension.cls```, ```AttachInvoicePDF.page```
+* Search and clone previous expense invoices - ```PreviousExpenseInvoices_CC.cls```, ```PreviousExpenseInvoices.page```
+
+Includes unit tests for each .cls
 
 **Unit Test Coverage: 95%**
 
