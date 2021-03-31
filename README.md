@@ -2,6 +2,8 @@
 
 Fictional scenario of a Salesforce Training Partner requiring an invoice system for their sub-contractors. The Salesforce org will track the courses that they have scheduled, the trainers who will deliver them and the invoicing & expenses for each of their sub-contracting trainers.
 
+System requires both service and expense invoices.
+
 **Requirements - Solutions**
 * Apex sharing, send course notification emails, create/update calendar events - ```CourseTrigger.trigger```, ```CourseTriggerHandler.cls```
 * Attach PDF to notification email - ```InvoiceTrigger.trigger```, ```InvoiceTriggerHandler.cls```
