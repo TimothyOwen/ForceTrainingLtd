@@ -2,6 +2,16 @@
 
 Fictional scenario of a Salesforce Training Partner requiring an invoice system for their sub-contractors. The Salesforce org will track the courses that they have scheduled, the trainers who will deliver them and the invoicing & expenses for each of their sub-contracting trainers.
 
+System requires both service and expense invoices.
+
+**Requirements - Solutions**
+* Apex sharing, send course notification emails, create/update calendar events - ```CourseTrigger.trigger```, ```CourseTriggerHandler.cls```
+* Attach PDF to notification email - ```InvoiceTrigger.trigger```, ```InvoiceTriggerHandler.cls```
+* Generate invoice PDF - ```ExpenseInvoicePDF.page```, ```ServiceInvoicePDF.page```
+* Attach invoice PDF to parent course - ```AttachExtension.cls```, ```AttachInvoicePDF.page```
+* Search and clone previous expense invoices - ```PreviousExpenseInvoices_CC.cls```, ```PreviousExpenseInvoices.page```
+
+Includes unit tests for each .cls
 
 **Unit Test Coverage: 95%**
 
@@ -10,7 +20,7 @@ Fictional scenario of a Salesforce Training Partner requiring an invoice system 
 
 
 
-## Schema  
+## Org Structure  
 
 The org utilizes the standard object of Opportunity, renaming it Course. Three custom objects have been created, Course Rate (Course_Rate__c), Invoice (InvoiceC__c), and Invoice Line (InvoiceLine__c). The email log (Email_Log__c) custom object has also been created, to help with testing triggers that send emails.
 
