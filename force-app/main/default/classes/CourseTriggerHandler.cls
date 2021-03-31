@@ -77,7 +77,7 @@ public with sharing class CourseTriggerHandler {
         toAddresses.add('t32.owen@gmail.com');
         List<Opportunity> instructors = new List<Opportunity>();
         instructors = [SELECT Id, Name, Start_Date__c, StageName, Type, Instructor__r.Email, Instructor__r.Name FROM Opportunity WHERE Id IN :courses];
-        
+        System.debug(instructors);
         for(Opportunity course: instructors){
             Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
             Email_Log__c emailLog = new Email_Log__c();
@@ -122,7 +122,7 @@ public with sharing class CourseTriggerHandler {
             }
         }   
         if(emails.size()>0){
-            //Messaging.sendEmail(emails, false);
+            Messaging.sendEmail(emails, false);
             insert emailLogs;
         }
     }

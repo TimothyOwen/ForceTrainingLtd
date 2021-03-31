@@ -4,7 +4,7 @@ trigger InvoiceTrigger on InvoiceC__C (before insert, after insert, before updat
 
         }
         if(Trigger.isUpdate){
-
+            
         }
         if(Trigger.isDelete){
             

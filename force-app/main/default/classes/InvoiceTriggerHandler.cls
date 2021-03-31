@@ -1,4 +1,4 @@
-public with sharing class InvoiceTriggerHandler {
+public class InvoiceTriggerHandler {
     public static void invoiceEmail(List<InvoiceC__c> newInvoices, Map<Id, InvoiceC__c> oldMap){
         for(InvoiceC__c invoice : newInvoices){
             if(invoice.Status__c == 'Submitted' && invoice.Status__c != oldMap.get(invoice.Id).Status__c){
@@ -22,10 +22,10 @@ public with sharing class InvoiceTriggerHandler {
                 email.setSubject('Invoice Submitted');
                 emailLog.Subject__c = email.getSubject();
                 email.setToAddresses(toAddresses);
-                email.setPlainTextBody('Dear Jason Peters,<br></br>Please find the submitted invoice for Invoice: '+invoice.Invoice_ID__c+' attached');
-                emailLog.Body__c = body.toString();
+                email.setPlainTextBody('Dear Jason Peters, Please find the submitted invoice for Invoice: '+invoice.Invoice_ID__c+' attached.');
+                //emailLog.Body__c = body.toString();
                 email.setFileAttachments(new Messaging.EmailFileAttachment[]{emailAttachment});
-                //Messaging.sendEmail(new Messaging.SingleEmailMessage[]{email});
+                Messaging.sendEmail(new Messaging.SingleEmailMessage[]{email});
                 insert emailLog;
             }
         }

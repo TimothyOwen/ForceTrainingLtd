@@ -4,7 +4,7 @@ public class AttachExtension {
         this.invoiceRecord = (InvoiceC__c) standardController.getRecord();
     }
     public PageReference attachPDF(){
-        InvoiceC__c invoice = [Select RecordType.Name, Invoice_ID__c, Course__r.Id, IsPDFGenerated__c from InvoiceC__c WHERE Id = :invoiceRecord.Id LIMIT 1];
+        InvoiceC__c invoice = [Select RecordType.Name, Invoice_ID__c, Course__r.Id, Course__r.Instructor__c, IsPDFGenerated__c from InvoiceC__c WHERE Id = :invoiceRecord.Id LIMIT 1];
         String partialURL = '/apex/'+invoice.RecordType.Name+'InvoicePDF?id='+invoice.Id;  
         PageReference pdf = new PageReference(partialURL);
         Attachment attachment = new Attachment();
@@ -18,6 +18,7 @@ public class AttachExtension {
         attachment.Body = body;
         attachment.Name = 'Invoice: '+invoice.Invoice_ID__c;
         attachment.isPrivate = false;
+        attachment.OwnerId = invoice.Course__r.Instructor__c;
         attachment.ParentId = invoice.Course__r.Id;
         List<Attachment> oldAttachments = new List<Attachment>();
         oldAttachments = [SELECT Name FROM Attachment WHERE Name = :attachment.Name];
