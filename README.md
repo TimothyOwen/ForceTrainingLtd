@@ -13,7 +13,7 @@ System requires both service and expense invoices.
 
 Includes unit tests for each .cls
 
-**Unit Test Coverage: 95%**
+**Unit Test Coverage: >95%**
 
 
 [JIRA Link](https://towen.atlassian.net/jira/software/c/projects/FT/boards)
