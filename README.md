@@ -11,7 +11,7 @@ System requires both service and expense invoices.
 * Attach invoice PDF to parent course - ```AttachExtension.cls```, ```AttachInvoicePDF.page```
 * Search and clone previous expense invoices - ```PreviousExpenseInvoices_CC.cls```, ```PreviousExpenseInvoices.page```
 
-Includes unit tests for each .cls
+Includes unit tests for each .cls  
 
 **Unit Test Coverage: >95%**
 
