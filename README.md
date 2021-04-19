@@ -43,3 +43,4 @@ The org utilizes the standard object of Opportunity, renaming it Course. Three c
 A Visualforce page that let's an instructor see a list of their previous expense invoices. They can then clone a specific expense invoice, including all of it's related invoice line items, for the course that they are currently viewing.
 
 ![CloneExpense.png](docs/CloneExpense.png)
+ 
